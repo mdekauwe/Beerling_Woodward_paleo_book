@@ -90,6 +90,8 @@ delta_13Cp = delta_13Ca - a - (b - a) * (Ci / Ca)
 
 print(delta_13Cp)
 
+# I've completely guessed these numbers by eye...Nerlie gave me a data source
+# NB...the new data looked pretty different!
 x = np.array([-500, -450, -400, -350, -340, -330, -300, -300, -280, -250, \
               -225, -200, -100, -50, 0])
 co2 = np.array([4900, 5000, 4000, 3000, 2000, 1000, 500, 490,  500, \
@@ -143,10 +145,6 @@ Ts = ((sc / 4 * (1 - albedo)) + (6.3 * log((280 + c) / 280)) +  212) / 1.55
 print(Ts, Ts - deg2kelvin)
 
 
-co2 = np.array([4900, 5000, 4000, 3000, 2000, 500, 400, 400,  400, \
-                1000, 1300, 1200, 900, 500, 300])
-x = np.array([-500, -450, -400, -350, -340, -330, -300, -300, -280, -250, \
-              -225, -200, -100, -50, 0])
 plt.plot(x, co2)
 plt.show()
 
