@@ -36,6 +36,22 @@ def solve_delta13c(Ci, Ca):
 
     return delta_13Cp
 
+
+def solve_surface_temp(albedo, co2, l=1.0):
+
+    sc = 1367
+
+    c = co2 - 280
+
+    # solar luminosity correction, no idea what this is ...
+    # this number simply improves agreement to book plot
+    #l = 0.98
+    #l = 1.0 # ignore
+    Ts = ((sc * l / 4 * (1 - albedo)) + \
+            (6.3 * np.log((280 + c) / 280)) +  212) / 1.55
+
+    return Ts # Kelvin
+
 # Chp2: Solution for Ci (based on eqn 2.12), given knowledge of stomtal conductance
 Ca = 3500 # umol mol-1
 g = 0.005 # at 3500 ppm
@@ -99,67 +115,30 @@ co2 = np.array([4900, 5000, 4000, 3000, 2000, 1000, 500, 490,  500, \
 Ci = np.zeros(len(co2))
 
 
-""" This is obv wrong, Vcmax needs to time varying, just looking
-g = 0.204 # at 350 ppm
-Vcmax = 50
-Vomax = 26
-o = 260 # uM with an external ambient O2 conc of 21%
-Kc = 200 # uM at 350 ppm ish
-Ko = 500 # range 360 uM to 650
-
-for i, Ca in enumerate(co2):
-
-    if x[i] < -350:
-        Vcmax = 5
-    elif x[i] >= -350 and x[i] <-250:
-        Vcmax = 100
-    elif x[i] >= -250 and x[i] <-50:
-        Vcmax = 50
-    a = -g * Ko
-    b = (g * Ca * Ko) - (g * Ko * Kc) - (g * o * Kc) - (Ko * Vcmax)
-    c = (g * Ca * Ko * Kc) + (g * Ca * o * Kc) + (Vomax * o * Kc / 2)
-
-    Ci[i] = quadratic(a=a, b=b, c=c, large=False) # postitive root
-plt.plot(x, Ci/co2)
+plt.plot(x, co2)
 plt.show()
 
-sys.exit()
-"""
+
+# Solve surface T
 
 sc = 1367
 albedo = 0.31
 deg2kelvin = 273.15
 
-Ts = ((sc / 4 * (1 - albedo)) + 212) / 1.55
-
+co2x = 5000
+Ts = solve_surface_temp(albedo, co2x)
 print(Ts, Ts - deg2kelvin)
 
-c = 5000 - 280
-Ts = ((sc / 4 * (1 - albedo)) + (6.3 * log((280 + c) / 280)) +  212) / 1.55
-
-print(Ts, Ts - deg2kelvin)
-
-c = 350 - 280
-Ts = ((sc / 4 * (1 - albedo)) + (6.3 * log((280 + c) / 280)) +  212) / 1.55
-
+co2x = 350
+Ts = solve_surface_temp(albedo, co2x)
 print(Ts, Ts - deg2kelvin)
 
 
-plt.plot(x, co2)
-plt.show()
-
-c = co2 - 280
-
-l = 1.0
-Ts = ((sc * l / 4 * (1 - albedo)) + (6.3 * np.log((280 + c) / 280)) +  212) / 1.55
-
+Ts = solve_surface_temp(albedo, co2, l=1.0)
 plt.plot(x, Ts, label="sL = 1")
 
-l = 0.98
-Ts = ((sc * l / 4 * (1 - albedo)) + (6.3 * np.log((280 + c) / 280)) +  212) / 1.55
-
-#
-plt.plot(x, Ts)
+Ts = solve_surface_temp(albedo, co2, l=0.98)
+plt.plot(x, Ts, label="sL = 0.98")
 
 
 plt.legend(numpoints=1, loc="best")
