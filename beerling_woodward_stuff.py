@@ -62,11 +62,8 @@ o = 260 # uM with an external ambient O2 conc of 21%
 Kc = 200 # uM at 350 ppm ish
 Ko = 500 # range 360 uM to 650
 
-a = -g * Ko
-b = (g * Ca * Ko) - (g * Ko * Kc) - (g * o * Kc) - (Ko * Vcmax)
-c = (g * Ca * Ko * Kc) + (g * Ca * o * Kc) + (Vomax * o * Kc / 2)
+Ci = solve_ci(g, Ko, Kc, Ca, o)
 
-Ci = quadratic(a=a, b=b, c=c, large=False) # postitive root
 print(Ci, Ci/Ca)
 
 delta_13Cp = solve_delta13c(Ci, Ca)
