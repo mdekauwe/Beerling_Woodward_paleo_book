@@ -1,3 +1,5 @@
+import math
+
 def quadratic(a=None, b=None, c=None, large=False):
     """ minimilist quadratic solution as root for J solution should always
     be positive, so I have excluded other quadratic solution steps. I am
@@ -40,6 +42,6 @@ def quadratic(a=None, b=None, c=None, large=False):
             if c != 0.0:
                 raise ValueError('Cant solve quadratic')
         else:
-            root = (-b - np.sqrt(d)) / (2.0 * a)
+            root = (-b - math.sqrt(d)) / (2.0 * a)
 
     return root
